@@ -72,16 +72,24 @@ def deleteRestaurant(restaurant_id):
 # List Menu Item
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurantMenu(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id = 
       restaurant_id).all()
-    return render_template('menuItem/menu.html', restaurant = restaurant_id, items = items)
+    return render_template('menuItem/menu.html', 
+        restaurant = restaurant, items = items)
     
 # Create a Menu Item
-@app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET', 'POST'])
+@app.route('/restaurants/<int:restaurant_id>/new/', 
+    methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
     if(request.method == 'POST'):
-        newItem = MenuItem(name = request.form['name'], restaurant_id = 
-            restaurant_id)
+        newItem = MenuItem(
+                    name = request.form['name'],
+                    description="Juicy grilled veggie patty with tomato mayo and lettuce",
+                    price="$7.50", 
+                    course="Entree", 
+                    restaurant_id = restaurant_id
+                )
         session.add(newItem)
         session.commit()
         flash("new menu item created!")
@@ -99,6 +107,10 @@ def editMenuItem(restaurant_id, menu_id):
         restaurant_id = restaurant_id).one()
     if(request.method == 'POST'):
         myMenuItem.name = request.form['name']
+        myMenuItem.description=request.form['description']
+        myMenuItem.price=request.form['price']
+        myMenuItem.course=request.form['course']
+
         session.add(myMenuItem)
         session.commit()
         flash("menu item updated!")
@@ -107,7 +119,7 @@ def editMenuItem(restaurant_id, menu_id):
     else:
 
         return render_template('menuItem/editmenuitem.html', restaurant_id = 
-            restaurant_id, menu_id = menu_id, menuItem = myMenuItem)
+            restaurant_id, menuItem = myMenuItem)
 
 # Delete Menu Item
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/', 
@@ -123,7 +135,8 @@ def deleteMenuItem(restaurant_id, menu_id):
             restaurant_id))
     else:
 
-        return render_template('menuItem/deletemenuitem.html', item = itemToDelete)
+        return render_template('menuItem/deletemenuitem.html', 
+            restaurant_id = restaurant_id,  menuItem = itemToDelete)
 
 
 if __name__ == '__main__':

@@ -4,9 +4,10 @@
 </head>
 <body>
 
-    <h1>{{restaurant.name}}</h1>
+    <h1>{{restaurant.name}} Restaurant's Menu</h1>
 
-    <a href="{{ url_for('newMenuItem', restaurant_id = restaurant.id) }}">Create New Item</a>
+    <a href="{{ url_for('newMenuItem', restaurant_id = restaurant.id) }}">[New]</a> 
+    <a href="{{ url_for('showRestaurants') }}">[Return]</a>
     </br>
 
     {% with messages = get_flashed_messages() %}
@@ -30,11 +31,10 @@
         <p> {{i.price}} </p>
 
     </div>
-
-    <a href="{{ url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id ) }}">Edit</a>
-    </br>
-    <a href="{{ url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}">Delete</a>
-
+    
+    <a href="{{ url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id ) }}">[Edit] </a><a href="{{ url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}">[Delete]</a>
+    <BR>
+    <BR>
 
     {% endfor %}
 </body>
